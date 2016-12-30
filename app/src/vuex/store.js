@@ -55,7 +55,7 @@ const results = {
 }
 
 const state = {
-  count: 3,
+  count: 10,
   results: results
 }
 
