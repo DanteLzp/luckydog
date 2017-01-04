@@ -3,7 +3,7 @@
     <div v-for="item in filteredItems" class="item clickable">
       <div class="content">
         <span>
-          {{ item.number }} get a {{ item.award }}
+          {{ item.number }} 获得了 {{ item.award }}
         </span>
       </div>
     </div>

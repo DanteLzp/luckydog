@@ -2,17 +2,15 @@
   <div>
     <div id="categories">
       <div id="cat-header">
-        <h2><i class="bookmark icon"></i>lottery items</h2>
+        <h2><i class="bookmark icon"></i>获奖名单</h2>
       </div>
       <div class="container">
-        <h2>lottery levels</h2>
-
         <div class="ui list">
           <div v-for="{name, color} in levels" class="item clickable">
             <div class="content">
               <a class="ui empty circular label" :class="color"></a>
               <span>
-                {{ name }}
+                {{ dict[name] }}
               </span>
               <level-list :items="items" :name="name"></level-list>
             </div>
@@ -29,7 +27,7 @@
 </template>
 
 <script>
-  // import { mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
   import SettingModal from './SettingModal.vue'
   import LevelList from './LevelList.vue'
 
@@ -41,6 +39,9 @@
       LevelList
     },
     computed: {
+      ...mapGetters([
+        'dict'
+      ]),
       items () {
         return this.results["items"]
       },

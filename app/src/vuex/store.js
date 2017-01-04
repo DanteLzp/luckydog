@@ -1,81 +1,154 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-const _ = require('lodash')
+import _ from 'lodash'
 // import * as actions from './actions'
 // import * as getters from './getters'
 // import modules from './modules'
 
 Vue.use(Vuex)
 
-const results = {
+const mockData = {
   "items" : [
     {
       "number": 1,
-      "level" : "gold",
+      "level" : 1,
       "award" : "computer",
     },
     {
       "number": 2,
-      "level" : "silver",
+      "level" : 2,
       "award" : "usb",
     },
     {
       "number": 3,
-      "level" : "copper",
+      "level" : 3,
       "award" : "mouse",
     },
     {
       "number": 4,
-      "level" : "copper",
+      "level" : 3,
       "award" : "mouse",
     },
     {
       "number": 5,
-      "level" : "silver",
+      "level" : 2,
       "award" : "usb",
     }
-  ],
+  ]
+}
+const data = {
+  "items" : [],
   "levels" : [
     {
-      "name" : "gold",
+      "name" : 1,
       "color" : "blue",
       "number" : 1
     },
     {
-      "name" : "silver",
+      "name" : 2,
       "color" : "purple",
-      "number" : 1
+      "number" : 3
     },
     {
-      "name" : "copper",
+      "name" : 3,
       "color" : "yellow",
-      "number" : 1
+      "number" : 6
     }
-  ]
+  ],
+  "dict" : {
+    1: '一等奖',
+    2: '二等奖',
+    3: '三等奖'
+  },
+  "awards" : {
+    1: 'kindle paperwrite, ipod',
+    2: 'mouse, headset',
+    3: 'usb, keyboard, notebook'
+  }
 }
 
 const state = {
   count: 10,
-  results: results
+  cells: [],
+  results: data
 }
 
 const getters = {
-  numItems (state) {
-    return _.range(1, state.count + 1)
+  initCells (state) {
+    return Array.apply(null, { length: state.count })
+          .map(function (_, index) {
+                return {
+                  id: index,
+                  number: index + 1
+                }
+          })
   },
+  levels (state) {
+    return state.results['levels']
+  },
+  dict (state) {
+    return state.results['dict']
+  },
+  awards (state) {
+    return state.results['awards']
+  }
 }
 
 const mutations = {
   setCount (state, payload) {
-    state.count = payload.count
+    state.results['levels'][0].number = payload.numTmp.num1
+    state.results['levels'][1].number = payload.numTmp.num2
+    state.results['levels'][2].number = payload.numTmp.num3
+    state.count = payload.numTmp.count
+  },
+  increment (state, payload) {
+    payload.initCells.splice(state.count, 0, {id: state.count++ , number:state.count})
+  },
+  decrement (state, payload) {
+    if (payload.numList.length < 1) {
+      payload.initCells.splice(state.count--, 1)
+    } else {
+      state.count = state.count - payload.numList.length
+      if (state.cells.length === 0) {
+        state.cells = payload.initCells
+      }
+      _.remove(state.cells, (cell)=> {
+        return payload.numList.includes(cell.number.toString())
+      })
+    }
+  },
+  updateResults (state, payload) {
+    state.results['items'].push(payload.item)
   }
 }
 
+let lastItem = {}
+
 const actions = {
-  setCount ({ commit }, joinNum) {
+  setCount ({ commit }, numTmp) {
     commit({
       type: 'setCount',
-      count: joinNum
+      numTmp: numTmp
+    })
+  },
+  addCell ({ commit, getters }) {
+    commit({
+      type: 'increment',
+      initCells: getters.initCells
+    })
+  },
+  removeCell ({ commit, getters }, numList) {
+    commit({
+      type: 'decrement',
+      initCells: getters.initCells,
+      numList: numList
+    })
+  },
+  updateResults ({ commit }, item) {
+    if (item === undefined || lastItem === item ) return
+    commit({
+      type: 'updateResults',
+      item: item
     })
   }
 }

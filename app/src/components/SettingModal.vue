@@ -2,7 +2,7 @@
   <div id="set-modal" class="ui small modal">
     <div class="header">
       <i class="close icon right-float clickable"></i>
-      Setting number of people
+      设置人数
     </div>
     <div class="content">
       <form class="ui form">
@@ -15,20 +15,20 @@
             <input v-model="num1" @focus="selectAll" type="number" placeholder="">
           </div> -->
           <div class="field">
-            <label>level 1</label>
+            <label>一等奖</label>
             <input v-model="num1" @focus="selectAll" type="number" placeholder="level1 count...">
           </div>
           <div class="field">
-            <label>level 2</label>
+            <label>二等奖</label>
             <input v-model="num2" @focus="selectAll" type="number" placeholder="level2 count...">
           </div>
           <div class="field">
-            <label>level 3</label>
+            <label>三等奖</label>
             <input v-model="num3" @focus="selectAll" type="number" placeholder="level3 count...">
           </div>
 
         </div>
-        <span>Total: {{ totalJoinNum }}</span>
+        <span>总数: {{ totalJoinNum }}</span>
 
         <!-- <div class="field">
           <label>Category color</label>
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'setting-modal',
@@ -65,16 +65,30 @@
       }
     },
     computed: {
+      ...mapGetters([
+        'levels'
+      ]),
       totalJoinNum () {
         return this.num1 + this.num2 + this.num3
       }
+    },
+    created () {
+      this.num1 = this.levels[0].number
+      this.num2 = this.levels[1].number
+      this.num3 = this.levels[2].number
     },
     methods: {
       ...mapActions([
         'setCount'
       ]),
       updateState () {
-        this.setCount(this.totalJoinNum)
+        let numTmp = {
+          'num1': this.num1,
+          'num2': this.num2,
+          'num3': this.num3,
+          'count': this.totalJoinNum
+        }
+        this.setCount(numTmp)
         $('#set-modal').modal('hide')
       },
       selectAll (event) {
