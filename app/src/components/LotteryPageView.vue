@@ -17,11 +17,14 @@
     </div>
     <div class="main">
       <div>
-      <select id="level" class="ui dropdown">
+      <!-- <select id="level" class="ui dropdown">
         <option value="1">一等奖 | {{levels[0].number}}</option>
         <option value="2">二等奖 | {{levels[1].number}}</option>
         <option value="3">三等奖 | {{levels[2].number}}</option>
-      </select>
+      </select> -->
+      <div class="ui label">
+        <i class="smile icon large"></i> {{levels[0].number}}
+      </div>
       <button id="start-btn" class="ui right labeled icon button" @click="marquee">
         <i class="circle icon"></i>
         开始
@@ -54,6 +57,7 @@
   // import NumberItem from './NumberItem.vue'
   import InfoModal from './InfoModal.vue'
   let addInt, rmInt, flag
+  let isRun = false
 
   export default {
     name: 'lottery-page',
@@ -86,43 +90,54 @@
         'removeCell'
       ]),
       marquee: function () {
-        $('.add').parent().addClass('disabled')
-        $('.minus').parent().addClass('disabled')
-        addInt = setInterval(() => {
-          $('.cell').eq(this.randomIndex()).addClass('active')
-        }, 100)
-        rmInt = setInterval(() => {
-          $(".cell.active").removeClass("active");
-        }, 200)
+        if (!isRun) {
+          $('.add').parent().addClass('disabled')
+          $('.minus').parent().addClass('disabled')
+          addInt = setInterval(() => {
+            $('.cell').eq(this.randomIndex()).addClass('active')
+          }, 100)
+          rmInt = setInterval(() => {
+            $(".cell.active").removeClass("active");
+          }, 200)
+        }
+        isRun = true
       },
       stopInt () {
         clearInterval(addInt)
         clearInterval(rmInt)
         $(".cell.active").removeClass("active");
 
-        let flag = $('#level').val()
+        // let flag = $('#level').val()
+        let flag = 0
         let tmp = []
 
-        if (flag === '1') {
+        if ($('.smile').length !== 0) {
           _.times(this.levels[0].number, () => {
             $('.cell').eq(this.randomIndex()).addClass('active')
           })
           tmp.push($.trim($(".cell.active").text()))
-          $('#level').val('2')
-        } else if (flag === '2') {
+          // $('#level').val('2')
+          $('.smile').parent().contents().last().replaceWith(this.levels[1].number)
+          $('.smile').removeClass('smile').addClass('meh')
+          flag = 1
+        } else {
           _.times(this.levels[1].number, () => {
             $('.cell').eq(this.randomIndex()).addClass('active')
           })
           Array.prototype.forEach.call($(".cell.active"), (ele) => {
             tmp.push($.trim(ele.innerText))
           })
-          $('#level').val('3')
+          // $('#level').val('3')
+          $('.meh').parent().contents().last().replaceWith(this.levels[2].number)
+          $('.meh').removeClass('meh').addClass('frown')
           $('.circle').parent().addClass('disabled')
           $('.pause').parent().addClass('disabled')
+          flag = 2
         }
         this.currentNum = tmp // ['1','2']
         this.currentLevel = flag // 1 or 2
 
+        isRun = false
         $('#info-modal').modal('show')
       },
       randomIndex () {
