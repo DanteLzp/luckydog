@@ -1,7 +1,7 @@
 <template>
   <div id="links-container">
     <div class="ui message">
-      <h1>新年快乐！ {{ count }} 位小伙伴未获奖</h1>
+      <h1>新年快乐！ {{ count }} 位小伙伴等待中</h1>
     </div>
     <div class="main">
       <div id="inner">
@@ -136,14 +136,15 @@
       },
       special () {
         if (this.count !== 0) {
-          alert('please choose other awards.')
+          alert('其他奖励没有抽取完')
           return
         }
         this.add()
         let num = this.specialNum
         let getRandomInt = this.getRandomInt
+        // console.log($);
         $(function(){
-          $('.cell.clickable').addClass("specialCell")
+          $('.cell').removeClass('clickable').addClass("specialCell")
 
           $('.cell').click(function() {
             if (!isRun) {
@@ -153,6 +154,7 @@
               isRun = true
             } else {
               clearInterval(addInt)
+              $('.cell').removeClass('specialCell').addClass("specialCellNoAnime")
               isRun = false
             }
           })
@@ -206,6 +208,7 @@
 
 .message {
   background-image: url('../../static/assets/banner.jpg');
+  background-size: cover;
   text-align: center;
 }
 
@@ -239,8 +242,19 @@ h1 {
   width: 530px;
   height: 700px;
   margin-left: 500px;
-  animation: swinging 1.5s ease-in-out forwards infinite;
+  animation: swinging 1.5s ease forwards infinite;
   background-color: #f8c367;
+  font-size: 400px;
+  font-weight: 100;
+}
+
+.specialCellNoAnime {
+  width: 530px;
+  height: 700px;
+  margin-left: 500px;
+  background-color: #f8c367;
+  font-size: 400px;
+  font-weight: 100;
 }
 
 @keyframes swinging{

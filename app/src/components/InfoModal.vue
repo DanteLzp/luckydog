@@ -1,7 +1,7 @@
 <template>
   <div id="info-modal" class="ui small modal">
     <div class="header">
-      <i class="close icon right-float clickable"></i>
+      <!-- <i class="close icon right-float clickable"></i> -->
       获奖结果
     </div>
     <div class="content">
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="actions">
-      <div @click="pushToSideBar" class="ui purple inverted button">Save</div>
+      <div @click="pushToSideBar" class="ui purple inverted button">确定</div>
     </div>
   </div>
 </template>

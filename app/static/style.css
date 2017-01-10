@@ -17,7 +17,7 @@ body {
 }
 
 #categories {
-  background-color: #fde0a6;
+  background-color: #D74F41;
   /*background-image: url('./assets/side.jpg');*/
   /*background-size: 100% 100%;*/
   position: absolute;
@@ -26,7 +26,7 @@ body {
   left: 0;
   width: 300px;
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
   color: #8F9497;
 }
 
@@ -49,7 +49,8 @@ body {
 }
 
 #cat-header {
-  background-color: #DC143C;
+  background-image: url("./assets/banner.jpg");
+  background-size: cover;
   height: 80px;
   position: relative;
 }
@@ -60,8 +61,8 @@ body {
   color: #FFDF00;
   /*text-transform: uppercase;*/
   position: absolute;
-  bottom: 10px;
-  left: 15px;
+  bottom: 20px;
+  left: 45px;
 }
 
 #categories h2 .bookmark.icon,
@@ -112,17 +113,6 @@ div.content:hover i.remove.icon {
   background-size: 110% 100%;
 }
 
-#toolbar {
-  background-color: #D4D9DA;
-  border-bottom: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: #C2C7CA;
-  height: 60px;
-  padding-top: 10px;
-  padding-left: 30px;
-  padding-right: 30px;
-}
-
 i.remove.icon {
   opacity: 0;
   -webkit-transition: opacity .25s ease-in-out;
@@ -134,5 +124,9 @@ div.content:hover i.remove.icon {
 }
 
 span {
-  color: #da1212;
+  color: #fff;
+}
+
+#set-modal {
+  position: relative;;
 }

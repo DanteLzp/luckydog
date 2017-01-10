@@ -72,7 +72,7 @@ const template = [
         label: '了解更多',
         // click () { require('electron').shell.openExternal('http://electron.atom.io') }
         click () {
-          dialog.showMessageBox({type: 'info', message: '感谢使用！', buttons: ['确定']})
+          dialog.showMessageBox({type: 'info', message: '感谢使用！Author: esmeetu', buttons: ['确定']})
         }
       }
     ]

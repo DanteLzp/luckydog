@@ -61,9 +61,10 @@ const data = {
     3: '三等奖'
   },
   "awards" : {
-    1: 'kindle paperwrite, ipod',
-    2: 'mouse, headset',
-    3: 'usb, keyboard, notebook'
+    1: '小米手环2, 电脑包',
+    2: '羽毛球拍，电脑包(手提)，罗技鼠标，保温杯',
+    3: '米酒/酸奶机，纳豆/酸奶机，体脂称，移动电源，无线鼠标，铁三角耳机',
+    4: 'kindle一部'
   }
 }
 
@@ -104,6 +105,12 @@ const mutations = {
     state.results['levels'][2].number = payload.numTmp.num3
     state.count = payload.numTmp.count
   },
+  setAward (state, payload) {
+    state.results['awards'][1] = payload.awardTmp.award1
+    state.results['awards'][2] = payload.awardTmp.award2
+    state.results['awards'][3] = payload.awardTmp.award3
+    state.results['awards'][4] = payload.awardTmp.award4
+  },
   increment (state, payload) {
     payload.initCells.splice(state.count, 0, {id: state.count++ , number:state.count})
   },
@@ -135,6 +142,12 @@ const actions = {
     commit({
       type: 'setCount',
       numTmp: numTmp
+    })
+  },
+  setAward ({ commit }, awardTmp) {
+    commit({
+      type: 'setAward',
+      awardTmp: awardTmp
     })
   },
   addCell ({ commit, getters }) {

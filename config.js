@@ -5,7 +5,7 @@ const path = require('path')
 let config = {
   // Name of electron app
   // Will be used in production builds
-  name: 'lottery',
+  name: '年终抽奖系统',
 
   // Use ESLint (extends `standard`)
   // Further changes can be made in `.eslintrc.js`
