@@ -9,6 +9,8 @@ require('../static/style.css')
 require('../static/semantic.min.js')
 require('jquery.marquee')
 
+import Vuelidate from 'vuelidate'
+Vue.use(Vuelidate)
 
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'

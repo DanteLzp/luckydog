@@ -1,52 +1,32 @@
-<style scoped>
-  img {
-    margin-top: -25px;
-    width: 450px;
-  }
-  .list {
-    margin: 50px;
-    /*display: flex;
-    flex-wrap: warp;*/
-  }
-</style>
-
 <template>
   <div id="links-container">
     <div class="ui message">
-      <h1>欢迎！当前共有 {{ count }} 人</h1>
+      <h1>新年快乐！ {{ count }} 位小伙伴未获奖</h1>
     </div>
     <div class="main">
-      <div>
-      <!-- <select id="level" class="ui dropdown">
-        <option value="1">一等奖 | {{levels[0].number}}</option>
-        <option value="2">二等奖 | {{levels[1].number}}</option>
-        <option value="3">三等奖 | {{levels[2].number}}</option>
-      </select> -->
-      <div class="ui label">
-        <i class="smile icon large"></i> {{levels[0].number}}
+      <div id="inner">
+        <div class="ui action input setting">
+          <input type="number" v-model="selectNum" @focus="selectAll" placeholder="人数">
+          <select id="level" class="ui compact selection dropdown">
+            <option value="1">一等奖 | 余{{levels[0].number - selectNum}}</option>
+            <option value="2">二等奖 | 余{{levels[1].number - selectNum}}</option>
+            <option value="3">三等奖 | 余{{levels[2].number - selectNum}}</option>
+          </select>
+          <div id="start-btn" type="submit" class="ui button" @click="marquee">开始</div>
+          <div id="stop-btn" type="submit" class="ui button" @click="stopInt">停止</div>
+          <div type="submit" class="ui button" @click="add">添加</div>
+          <div type="submit" class="ui button" @click="remove">去除</div>
+        </div>
+        <div class="ui action input setting">
+          <input type="number" v-model="specialNum" @focus="selectAll" placeholder="人数">
+          <div type="submit" class="ui button" @click="special">特等奖</div>
+        </div>
+         <transition-group name="cell" tag="div" class="container">
+             <div v-for="cell in finalCells" :key="cell.id" class="cell clickable">
+               {{ cell.number }}
+             </div>
+         </transition-group>
       </div>
-      <button id="start-btn" class="ui right labeled icon button" @click="marquee">
-        <i class="circle icon"></i>
-        开始
-      </button>
-      <button id="stop-btn" class="ui labeled icon button" @click="stopInt">
-        <i class="pause icon"></i>
-        停止
-      </button>
-      <button class="ui labeled icon button" @click="add">
-        <i class="add icon"></i>
-        添加
-      </button>
-      <button class="ui labeled icon button" @click="remove">
-        <i class="minus icon"></i>
-        去除
-      </button>
-       <transition-group name="cell" tag="div" class="container">
-           <div v-for="cell in finalCells" :key="cell.id" class="cell clickable">
-             {{ cell.number }}
-           </div>
-       </transition-group>
-    </div>
     <info-modal :number="currentNum" :level="currentLevel"></info-modal>
   </div>
 </template>
@@ -56,6 +36,9 @@
   import { mapState, mapGetters, mapActions } from 'vuex'
   // import NumberItem from './NumberItem.vue'
   import InfoModal from './InfoModal.vue'
+
+  import { between } from 'vuelidate/lib/validators'
+
   let addInt, rmInt, flag
   let isRun = false
 
@@ -65,6 +48,13 @@
       return {
         currentNum: ['0'],
         currentLevel: '0',
+        selectNum: 0,
+        specialNum: 27
+      }
+    },
+    validations: {
+      selectNum: {
+        between: between(2, 10)
       }
     },
     components: {
@@ -76,12 +66,16 @@
         'cells'
       ]),
       ...mapGetters([
+        'items',
         'levels',
         'initCells',
       ]),
       finalCells () {
         return this.cells.length === 0 ? this.initCells : this.cells
       }
+    },
+    mounted () {
+      this.randomCellColor()
     },
     methods: {
       ...mapActions([
@@ -90,68 +84,112 @@
         'removeCell'
       ]),
       marquee: function () {
+        flag = $('#level').val()
+        if (this.levels[flag-1].number === 0) {
+          alert('no people left!')
+          return
+        }
+        if (this.selectNum === 0) {
+          alert('please input people count!')
+          return
+        }
         if (!isRun) {
           $('.add').parent().addClass('disabled')
           $('.minus').parent().addClass('disabled')
           addInt = setInterval(() => {
             $('.cell').eq(this.randomIndex()).addClass('active')
-          }, 100)
+          }, 50)
           rmInt = setInterval(() => {
             $(".cell.active").removeClass("active");
-          }, 200)
+          }, 100)
         }
         isRun = true
       },
       stopInt () {
+        if (!isRun) return
         clearInterval(addInt)
         clearInterval(rmInt)
         $(".cell.active").removeClass("active");
 
-        // let flag = $('#level').val()
-        let flag = 0
+        flag = $('#level').val()
         let tmp = []
-
-        if ($('.smile').length !== 0) {
-          _.times(this.levels[0].number, () => {
-            $('.cell').eq(this.randomIndex()).addClass('active')
-          })
-          tmp.push($.trim($(".cell.active").text()))
-          // $('#level').val('2')
-          $('.smile').parent().contents().last().replaceWith(this.levels[1].number)
-          $('.smile').removeClass('smile').addClass('meh')
-          flag = 1
-        } else {
-          _.times(this.levels[1].number, () => {
-            $('.cell').eq(this.randomIndex()).addClass('active')
-          })
-          Array.prototype.forEach.call($(".cell.active"), (ele) => {
-            tmp.push($.trim(ele.innerText))
-          })
-          // $('#level').val('3')
-          $('.meh').parent().contents().last().replaceWith(this.levels[2].number)
-          $('.meh').removeClass('meh').addClass('frown')
-          $('.circle').parent().addClass('disabled')
-          $('.pause').parent().addClass('disabled')
-          flag = 2
-        }
+        let indices = []
+        let curIx
+        _.times(this.selectNum, () => {
+          curIx = this.randomIndex()
+          while (indices.indexOf(curIx) !== -1) {
+            curIx = this.randomIndex()
+          }
+          indices.push(curIx)
+          // console.log('curIx:' + curIx);
+          $('.cell').eq(curIx).addClass('active')
+        })
+        Array.prototype.forEach.call($(".cell.active"), (ele) => {
+          tmp.push($.trim(ele.innerText))
+        })
+        this.selectNum = 0
         this.currentNum = tmp // ['1','2']
         this.currentLevel = flag // 1 or 2
 
         isRun = false
         $('#info-modal').modal('show')
       },
+      special () {
+        if (this.count !== 0) {
+          alert('please choose other awards.')
+          return
+        }
+        this.add()
+        let num = this.specialNum
+        let getRandomInt = this.getRandomInt
+        $(function(){
+          $('.cell.clickable').addClass("specialCell")
+
+          $('.cell').click(function() {
+            if (!isRun) {
+              addInt = setInterval(() => {
+                $(this).text(getRandomInt(1,num))
+              }, 50)
+              isRun = true
+            } else {
+              clearInterval(addInt)
+              isRun = false
+            }
+          })
+        })
+      },
       randomIndex () {
         return Math.floor(Math.random() * this.count)
       },
+      getRandomInt (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      },
       add () {
         this.addCell()
+        setTimeout(() => {
+          this.randomCellColor()
+        }, 0)
       },
       remove () {
         // remove last cell
-        if (this.count < 4) {
+        if (this.count < 1) {
           $('.minus').parent().addClass('disabled')
+          return
         }
-        this.removeCell([])
+        this.removeCell({'num': [], 'level': ''})
+        this.randomCellColor()
+      },
+      selectAll (event) {
+        setTimeout(() => {
+          event.target.select()
+        }, 0)
+      },
+      randomCellColor () {
+        let colors = ['#f2e966', '#f8c367', '#fd84a3', '#c172e7', '#9cc2ef', '#a7fe93'];
+        $('.cell').each((index,el) => {
+          let randomColorIndex = this.getRandomInt(0,colors.length-1);
+          $(el).css('background-color',colors[randomColorIndex]);
+        });
       }
     }
   }
@@ -159,43 +197,64 @@
 
 <style scoped>
 .container {
-display: flex;
-flex-wrap: wrap;
-/*width: 238px;*/
-margin-top: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  /*width: 238px;*/
+  margin-top: 60px;
+  align-items: center;
+}
+
+.message {
+  background-image: url('../../static/assets/banner.jpg');
+  text-align: center;
 }
 
 .main {
-  margin-left: 30px;
+  text-align: center;
+}
+
+#level {
+  height:auto;
 }
 
 h1 {
-  color: rgba(0,0,0,.54);
+  color: 	#FFDF00;
   border-bottom: 3px solid transparent;
+  font-size: 40px;
 }
 .cell {
-display: flex;
-justify-content: space-around;
-align-items: center;
-width: 120px;
-height: 120px;
-border: 1px solid #aaa;
-margin: 20px;
-background-color: #A9D5DE;
-font-size: 80px;
-font-weight: 10;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 126px;
+  height: 180px;
+  border: 1px solid #aaa;
+  margin: 20px;
+  font-size: 80px;
+  font-weight: 10;
+  border-radius: 50% / 60% 60% 40% 40%;
 }
+
+.specialCell {
+  width: 530px;
+  height: 700px;
+  margin-left: 500px;
+  animation: swinging 1.5s ease-in-out forwards infinite;
+  background-color: #f8c367;
+}
+
+@keyframes swinging{
+    0%{transform: rotate(20deg);}
+    50%{transform: rotate(-5deg)}
+    100%{transform: rotate(20deg);}
+}
+
 .container .active {
-  background-color: red;
+  background-image: url('../../static/assets/bg.jpg');
 }
-/*.cell:nth-child(3n) {
-margin-right: 0;
-}
-.cell:nth-child(27n) {
-margin-bottom: 0;
-}*/
+
 .cell-move {
-transition: transform 1s;
+  transition: transform 1s;
 }
 .cell-item {
   display: inline-block;

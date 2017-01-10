@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+  import { mapState, mapGetters, mapActions } from 'vuex'
   import _ from 'lodash'
 
   export default {
@@ -30,6 +30,9 @@
     },
     props: ['number', 'level'],
     computed: {
+      ...mapState([
+        'count'
+      ]),
       ...mapGetters([
         'awards',
       ])
@@ -50,7 +53,7 @@
           // console.log(item);
           this.updateResults(item)
         })
-        this.removeCell(this.number) // remove ['1', '2'] cell
+        this.removeCell({'num':this.number, 'level':this.level}) // remove ['1', '2'] cell
         $('#info-modal').modal('hide')
       }
     }
@@ -62,5 +65,9 @@
   font-size: 50px;
   font-weight: bolder;
   text-align: center;
+}
+
+.header {
+  word-break:break-all;
 }
 </style>

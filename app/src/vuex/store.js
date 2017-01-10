@@ -42,17 +42,17 @@ const data = {
     {
       "name" : 1,
       "color" : "blue",
-      "number" : 1
+      "number" : 4
     },
     {
       "name" : 2,
       "color" : "purple",
-      "number" : 3
+      "number" : 10
     },
     {
       "name" : 3,
       "color" : "yellow",
-      "number" : 6
+      "number" : 12
     }
   ],
   "dict" : {
@@ -68,7 +68,7 @@ const data = {
 }
 
 const state = {
-  count: 10,
+  count: 26,
   cells: [],
   results: data
 }
@@ -91,6 +91,9 @@ const getters = {
   },
   awards (state) {
     return state.results['awards']
+  },
+  items (state) {
+    return state.results['items']
   }
 }
 
@@ -108,7 +111,10 @@ const mutations = {
     if (payload.numList.length < 1) {
       payload.initCells.splice(state.count--, 1)
     } else {
-      state.count = state.count - payload.numList.length
+      let removedNum = payload.numList.length
+      let curLevel = parseInt(payload.level)-1
+      state.results['levels'][curLevel].number -= removedNum
+      state.count -= removedNum
       if (state.cells.length === 0) {
         state.cells = payload.initCells
       }
@@ -137,11 +143,12 @@ const actions = {
       initCells: getters.initCells
     })
   },
-  removeCell ({ commit, getters }, numList) {
+  removeCell ({ commit, getters }, info) {
     commit({
       type: 'decrement',
       initCells: getters.initCells,
-      numList: numList
+      numList: info['num'],
+      level: info['level']
     })
   },
   updateResults ({ commit }, item) {

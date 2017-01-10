@@ -17,7 +17,9 @@ body {
 }
 
 #categories {
-  background-color: #353E43;
+  background-color: #fde0a6;
+  /*background-image: url('./assets/side.jpg');*/
+  /*background-size: 100% 100%;*/
   position: absolute;
   top: 0;
   bottom: 0;
@@ -47,14 +49,15 @@ body {
 }
 
 #cat-header {
-  background-color: #4A5557;
-  height: 60px;
+  background-color: #DC143C;
+  height: 80px;
   position: relative;
 }
 
 #cat-header h2 {
   font-weight: bolder;
   font-size: 25px;
+  color: #FFDF00;
   /*text-transform: uppercase;*/
   position: absolute;
   bottom: 10px;
@@ -63,7 +66,7 @@ body {
 
 #categories h2 .bookmark.icon,
 #categories h2 .add.icon {
-  color: #87568D;
+  color: #FFDF00;
 }
 
 .clickable {
@@ -104,8 +107,9 @@ div.content:hover i.remove.icon {
   right: 0;
   bottom: 0;
   overflow: auto;
-  background-color: #fff;
   color: #5F676A;
+  background-image: url("./assets/bg.jpg");
+  background-size: 110% 100%;
 }
 
 #toolbar {
@@ -127,4 +131,8 @@ i.remove.icon {
 
 div.content:hover i.remove.icon {
   opacity: 0.5;
+}
+
+span {
+  color: #da1212;
 }
