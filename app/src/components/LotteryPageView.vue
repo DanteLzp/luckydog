@@ -74,23 +74,26 @@
         return this.cells.length === 0 ? this.initCells : this.cells
       }
     },
-    mounted () {
-      this.randomCellColor()
-    },
     methods: {
       ...mapActions([
         'updateResults',
         'addCell',
-        'removeCell'
+        'removeCell',
+        'setCount',
+        'addSpecial'
       ]),
       marquee: function () {
         flag = $('#level').val()
         if (this.levels[flag-1].number === 0) {
-          alert('no people left!')
+          alert('没人了!')
           return
         }
         if (this.selectNum === 0) {
-          alert('please input people count!')
+          alert('请输入人数!')
+          return
+        }
+        if (this.selectNum < 0) {
+          alert('人数不能为负!')
           return
         }
         if (!isRun) {
@@ -135,17 +138,17 @@
         $('#info-modal').modal('show')
       },
       special () {
-        if (this.count !== 0) {
+        if (this.count > 0) {
           alert('其他奖励没有抽取完')
           return
         }
-        this.add()
+        // add special cell
+        this.addSpecial()
         let num = this.specialNum
         let getRandomInt = this.getRandomInt
-        // console.log($);
         $(function(){
           $('.cell').removeClass('clickable').addClass("specialCell")
-
+          $('.cell').text('?')
           $('.cell').click(function() {
             if (!isRun) {
               addInt = setInterval(() => {
@@ -167,10 +170,11 @@
         return Math.floor(Math.random() * (max - min + 1)) + min;
       },
       add () {
+        if (isRun) return
         this.addCell()
-        setTimeout(() => {
-          this.randomCellColor()
-        }, 0)
+        // setTimeout(() => {
+        //   this.randomCellColor()
+        // }, 0)
       },
       remove () {
         // remove last cell
@@ -179,20 +183,20 @@
           return
         }
         this.removeCell({'num': [], 'level': ''})
-        this.randomCellColor()
+        // this.randomCellColor()
       },
       selectAll (event) {
         setTimeout(() => {
           event.target.select()
         }, 0)
       },
-      randomCellColor () {
-        let colors = ['#f2e966', '#f8c367', '#fd84a3', '#c172e7', '#9cc2ef', '#a7fe93'];
-        $('.cell').each((index,el) => {
-          let randomColorIndex = this.getRandomInt(0,colors.length-1);
-          $(el).css('background-color',colors[randomColorIndex]);
-        });
-      }
+      // randomCellColor () {
+      //   let colors = ['#f2e966', '#f8c367', '#fd84a3', '#c172e7', '#9cc2ef', '#a7fe93'];
+      //   $('.cell').each((index,el) => {
+      //     let randomColorIndex = this.getRandomInt(0,colors.length-1);
+      //     $(el).css('background-color',colors[randomColorIndex]);
+      //   });
+      // }
     }
   }
 </script>
@@ -202,7 +206,7 @@
   display: flex;
   flex-wrap: wrap;
   /*width: 238px;*/
-  margin-top: 60px;
+  margin-top: 10px;
   align-items: center;
 }
 
@@ -229,31 +233,39 @@ h1 {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 126px;
+  width: 120px;
   height: 180px;
   border: 1px solid #aaa;
-  margin: 20px;
+  margin: 15px;
   font-size: 80px;
   font-weight: 10;
   border-radius: 50% / 60% 60% 40% 40%;
+  background: #fceabb; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #fceabb , #f8b500); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #fceabb , #f8b500); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+.setting {
+  height: 50px;
 }
 
 .specialCell {
-  width: 530px;
-  height: 700px;
+  width: 330px;
+  height: 500px;
   margin-left: 500px;
   animation: swinging 1.5s ease forwards infinite;
   background-color: #f8c367;
-  font-size: 400px;
+  font-size: 250px;
   font-weight: 100;
 }
 
 .specialCellNoAnime {
-  width: 530px;
-  height: 700px;
+  width: 330px;
+  height: 500px;
   margin-left: 500px;
   background-color: #f8c367;
-  font-size: 400px;
+  font-size: 250px;
   font-weight: 100;
 }
 

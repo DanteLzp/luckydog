@@ -62,7 +62,7 @@
 
 <style scoped>
 .message {
-  font-size: 50px;
+  font-size: 30px;
   font-weight: bolder;
   text-align: center;
 }

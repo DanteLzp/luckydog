@@ -45,17 +45,6 @@
             </div>
           </div>
         </div>
-
-        <!-- <div class="field">
-          <label>Category color</label>
-          <select v-model="catColor" class="ui simple dropdown">
-            <option value="">Select a color</option>
-            <option v-for="color in categoryColors"
-              :value="color">
-              {{color}}
-            </option>
-          </select>
-        </div> -->
       </form>
     </div>
     <div class="actions">
@@ -63,6 +52,12 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.span {
+  color: #000;
+}
+</style>
 
 <script>
   import { mapGetters, mapActions } from 'vuex'

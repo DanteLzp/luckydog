@@ -130,6 +130,10 @@ const mutations = {
       })
     }
   },
+  addSpecial (state) {
+    state.cells = []
+    state.count = 1
+  },
   updateResults (state, payload) {
     state.results['items'].push(payload.item)
   }
@@ -154,6 +158,11 @@ const actions = {
     commit({
       type: 'increment',
       initCells: getters.initCells
+    })
+  },
+  addSpecial ({ commit}) {
+    commit({
+      type: 'addSpecial'
     })
   },
   removeCell ({ commit, getters }, info) {

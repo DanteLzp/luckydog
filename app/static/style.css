@@ -24,14 +24,14 @@ body {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 300px;
+  width: 200px;
   height: 100%;
   overflow: auto;
   color: #8F9497;
 }
 
 #categories div.list {
-  margin-left: 30px;
+  margin-left: 10px;
   font-family: 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -41,7 +41,7 @@ body {
 
 #categories h2 {
   margin-top: 20px;
-  margin-left: 15px;
+  margin-left: 5px;
   font-family: 'Raleway', sans-serif;
   font-weight: 400;
   font-size: 14px;
@@ -62,7 +62,7 @@ body {
   /*text-transform: uppercase;*/
   position: absolute;
   bottom: 20px;
-  left: 45px;
+  left: 15px;
 }
 
 #categories h2 .bookmark.icon,
@@ -104,7 +104,7 @@ div.content:hover i.remove.icon {
 #links-container {
   position: fixed;
   top: 0;
-  left: 300px;
+  left: 200px;
   right: 0;
   bottom: 0;
   overflow: auto;
@@ -125,8 +125,4 @@ div.content:hover i.remove.icon {
 
 span {
   color: #fff;
-}
-
-#set-modal {
-  position: relative;;
 }
